@@ -1,19 +1,23 @@
-name: Python application
+name: Pyapp
 
-on: [push, pull_request]
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the code
+    - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Set up Python
+    - name: Configurar Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'
+        python-version: 3.12.2
 
     - name: Instalando dependencias
       run: |
@@ -22,13 +26,7 @@ jobs:
 
     - name: Testes
       run: |
-        coverage run --source=app -m unittest discover
-        coverage report
-      continue-on-error: true
+        coverage run -m app_test
 
-    - name: Upload coverage report
-      if: failure()
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage-report
-        path: coverage.xml
+    - name: Resultados
+      run: coverage report
